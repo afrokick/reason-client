@@ -1,0 +1,16 @@
+D:\_Git\reason-client\AndroidApplication\bin\Debug\Reason.dll
+D:\_Git\reason-client\AndroidApplication\bin\Debug\Reason.pdb
+D:\_Git\reason-client\AndroidApplication\bin\Debug\Reason.dll.mdb
+D:\_Git\reason-client\AndroidApplication\bin\Debug\Reason.Reason.apk
+D:\_Git\reason-client\AndroidApplication\bin\Debug\Reason.Reason-Signed.apk
+D:\_Git\reason-client\AndroidApplication\obj\Debug\Reason.dll
+D:\_Git\reason-client\AndroidApplication\obj\Debug\Reason.pdb
+D:\_Git\reason-client\AndroidApplication\obj\Debug\android\bin\Reason.Reason.apk
+D:\_Git\reason-client\AndroidApplication\obj\Debug\res\layout\main.xml
+D:\_Git\reason-client\AndroidApplication\obj\Debug\res\values\strings.xml
+D:\_Git\reason-client\AndroidApplication\obj\Debug\res\drawable\icon.png
+D:\_Git\reason-client\AndroidApplication\obj\Debug\R.cs.flag
+D:\_Git\reason-client\AndroidApplication\obj\Debug\uploadflags.txt
+D:\_Git\reason-client\AndroidApplication\obj\Debug\AndroidApplication.csprojResolveAssemblyReference.cache
+D:\_Git\reason-client\AndroidApplication\bin\Debug\ReasonFramework.dll
+D:\_Git\reason-client\AndroidApplication\bin\Debug\ReasonFramework.pdb

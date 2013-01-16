@@ -1,0 +1,2 @@
+D:\_Git\reason-client\AndroidApplication\bin\Debug\Reason.dll
+D:\_Git\reason-client\AndroidApplication\bin\Debug\ReasonFramework.dll
