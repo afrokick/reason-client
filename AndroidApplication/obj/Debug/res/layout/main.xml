@@ -1,1 +1,14 @@
-<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:minWidth="25px" android:minHeight="25px" xmlns:android="http://schemas.android.com/apk/res/android"><Button android:id="@+id/MyButton" android:layout_width="fill_parent" android:layout_height="150.2dp" android:text="@string/Hello" android:layout_marginBottom="89.3dp" /></LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <Button
+        android:id="@+id/MyButton"
+        android:layout_width="fill_parent"
+        android:layout_height="150.2dp"
+        android:text="@string/Hello"
+        android:layout_marginBottom="89.3dp" />
+</LinearLayout>

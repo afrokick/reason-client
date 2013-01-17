@@ -20,7 +20,6 @@ namespace ReasonApplication
         {
             base.OnCreate(bundle);
             var net = new Network();
-            net.SendRequest();
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
@@ -29,6 +28,7 @@ namespace ReasonApplication
             Button button = FindViewById<Button>(Resource.Id.MyButton);
 
             button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
+            Logger.Log("up is started!{0}", "ok");
         }
     }
 }

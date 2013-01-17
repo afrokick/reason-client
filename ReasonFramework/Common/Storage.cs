@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ReasonFramework.Common
 {
@@ -8,25 +9,14 @@ namespace ReasonFramework.Common
     class Storage
     {
         #region Fields
-        private int _userId;
-        public int UserID
-        {
-            get { return _userId; }
-            set { _userId = value; }
-        }
-
-        private string _userName;
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
-
+        private Dictionary<string, string> _dicUids;
+        private int _complatedTasks;
+        private int _skippedTasks;
         #endregion
 
         public Storage()
         {
-
+            _dicUids = new Dictionary<string, string>();
         }
 
         private void Initialize()
