@@ -25,9 +25,17 @@ namespace ReasonApplication
 
             // Get our button from the layout resource,
             // and attach an event to it
-            Button button = FindViewById<Button>(Resource.Id.MyButton);
+            //Button button = FindViewById<Button>(Resource.Id.MyButton);
 
-            button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
+            //button.Click += delegate
+            //{
+            //    button.Text = string.Format("{0} clicks!", count++);
+            //};
+            //TabHost.TabSpec spec;     // Resusable TabSpec for each tab
+            //Intent intent;            // Reusable Intent for each tab
+
+            // Create an Intent to launch an Activity for the tab (to be reused)
+            
             Logger.Log("up is started!{0}", "ok");
         }
     }

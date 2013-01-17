@@ -74,6 +74,11 @@ namespace ReasonFramework.Common
         {
 
         }
+
+        public void SendLike()
+        {
+
+        }
         #endregion
     }
 }
