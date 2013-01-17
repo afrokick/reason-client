@@ -65,7 +65,15 @@ namespace ReasonFramework.Common
         }
         #endregion
         #region up level
+        public void SendComplateTask(string comment)
+        {
 
+        }
+
+        public void SendSkipTask()
+        {
+
+        }
         #endregion
     }
 }
