@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Text;
@@ -20,8 +20,9 @@ namespace ReasonFramework.Common
     {
         private const string SERVER_PATCH = "http://devby.ru/server/engine.php";
         //private List<WebClient> _webClients;
-        private Storage _storage;
+        //private Storage _storage;
         public event ResponseEventHandler OnAuthComplated;
+        public event ResponseEventHandler OnSendTaskComplated;
 
         public Network()
         {
@@ -30,8 +31,8 @@ namespace ReasonFramework.Common
 
         #region Down level work
         /// <summary>
-        /// Отправляет запрос на сервер.
-        /// Прикручивает валидацию
+        /// РћС‚РїСЂР°РІР»СЏРµС‚ Р·Р°РїСЂРѕСЃ РЅР° СЃРµСЂРІРµСЂ.
+        /// РџСЂРёРєСЂСѓС‡РёРІР°РµС‚ РІР°Р»РёРґР°С†РёСЋ
         /// </summary>
         /// <param name="request"></param>
         private void SendRequest(NetRequest request)
@@ -51,7 +52,7 @@ namespace ReasonFramework.Common
             
         }
         /// <summary>
-        /// Вызывается при получении данных
+        /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРѕР»СѓС‡РµРЅРёРё РґР°РЅРЅС‹С…
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -74,27 +75,29 @@ namespace ReasonFramework.Common
             }
         }
         /// <summary>
-        /// Парсит данные от сервера
+        /// РџР°СЂСЃРёС‚ РґР°РЅРЅС‹Рµ РѕС‚ СЃРµСЂРІРµСЂР°
         /// </summary>
         /// <param name="data"></param>
         private void ParseInputData(string data)
         {
             Logger.Log("input data:{0}", data);
-            var respone = new NetResponse(data);
-            var method = respone.GetMethod;
+            var response = new NetResponse(data);
+            var method = response.GetMethod;
 
-            if (respone.IsError)
+            if (response.IsError)
             {
-                Logger.Log("[Server Error]{0}", respone.GetError);
+                Logger.Log("[Server Error]{0}", response.GetError);
             }
 
             switch(method)
             {
                 case PacketTypes.auth:
                     if (OnAuthComplated != null)
-                    {
-                        OnAuthComplated(respone);
-                    }
+                        OnAuthComplated(response);
+                    break;
+                case PacketTypes.sendtask:
+                    if (OnSendTaskComplated != null)
+                        OnSendTaskComplated(response);
                     break;
                 default:
                     Logger.Log("Error parse: Packet haven't method!");
@@ -108,10 +111,24 @@ namespace ReasonFramework.Common
         {
 
         }
-
-        public void SendSkipTask()
+        /// <summary>
+        /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹РїРѕР»РЅРёР» РёР»Рё Р·Р°РєСЂС‹Р» С‚Р°СЃРє
+        /// </summary>
+        /// <param name="complated"></param>
+        /// <param name="rank"></param>
+        /// <param name="comment"></param>
+        public void SendTaskDone(bool complated, byte rank = 0, string comment = "")
         {
-
+            var request = new NetRequest(PacketTypes.sendtask);
+            request.AddParam("complated", complated);
+            if (complated)
+            {
+                if (rank != 0)
+                    request.AddParam("rank", rank);
+                if (!string.IsNullOrEmpty(comment.Trim()))
+                    request.AddParam("comment", comment);
+            }
+            SendRequest(request);
         }
 
         public void SendLike()
@@ -119,12 +136,27 @@ namespace ReasonFramework.Common
 
         }
 
-        public void SendAuth(LoginTypeEnum loginType, string login, string pass)
+        /// <summary>
+        /// РџРѕСЃС‹Р»Р°РµРј РїСЂРё РЅР°Р¶Р°С‚РёРё РєРЅРѕРїРєРё "Р’С…РѕРґ С‡РµСЂРµР·..." РёР»Рё "Р’С…РѕРґ" РґР»СЏ СЃС‚РµРЅРґСЌР»РѕРЅ
+        /// </summary>
+        /// <param name="loginType"></param>
+        /// <param name="login"></param>
+        /// <param name="pass"></param>
+        public void SendAuth(LoginTypeEnum loginType, string login = "", string pass = "")
         {
             var request = new NetRequest(PacketTypes.auth);
             request.AddParam("auth_type",loginType.ToString());
-            request.AddParam("login",login);
-            request.AddParam("pass", pass);
+            switch (loginType)
+            {
+                case LoginTypeEnum.stand_alone:
+                    request.AddParam("login", login);
+                    request.AddParam("pass", pass);
+                    break;
+                case LoginTypeEnum.vk:
+                    break;
+                default:
+                    break;
+            }
 
             SendRequest(request);
         }

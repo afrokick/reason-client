@@ -8,6 +8,7 @@ namespace ReasonFramework.Common
     public enum PacketTypes
     {
         nil,
-        auth
+        auth,
+        sendtask,
     }
 }

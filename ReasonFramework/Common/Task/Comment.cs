@@ -14,16 +14,21 @@ namespace ReasonFramework.Common
     {
         private string _text;
         public string Text { get { return _text; } }
+
         private string _authName;
         public string AuthName { get { return _authName; } }
+
         private DateTime _date;
         public DateTime Date { get { return _date; } }
-        private byte _ranking;
+
+        private byte _ranking;//оценка таска пользователя, который оставил коммент
         public byte Ranking { get { return _ranking; } }
-        private int _like;
-        private int _dislike;
-        private int _spam;
-        private CommentMark _mark;
+
+        private int _like;//сколько всего лайков
+        private int _dislike;//сколько всего дислайков
+        private int _spam;//сколько всего спама
+
+        private CommentMark _mark;//оценка пользователя
         public CommentMark Mark { get { return _mark; } }
 
         public bool CanVoted
