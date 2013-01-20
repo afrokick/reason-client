@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Logger.cs" />
+    <Compile Include="Common\Network\NetRequest.cs" />
+    <Compile Include="Common\Network\NetResponse.cs" />
     <Compile Include="Common\Network\Network.cs" />
     <Compile Include="Common\Network\PacketTypes.cs" />
     <Compile Include="Common\Storage.cs" />

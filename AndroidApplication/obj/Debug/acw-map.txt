@@ -1,1 +1,2 @@
 ReasonApplication.ReasonApplication;reasonapplication.ReasonApplication
+ReasonApplication.Resources.Layout.Activity1;reasonapplication.resources.layout.Activity1

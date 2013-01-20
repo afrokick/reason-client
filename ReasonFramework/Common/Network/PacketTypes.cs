@@ -2,7 +2,12 @@
 
 namespace ReasonFramework.Common
 {
-    class PacketTypes
+    /// <summary>
+    /// названия методов
+    /// </summary>
+    public enum PacketTypes
     {
+        nil,
+        auth
     }
 }

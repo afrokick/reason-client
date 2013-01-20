@@ -2,4 +2,4 @@ D:\_Git\reason-client\ReasonFramework\bin\Debug\ReasonFramework.dll
 D:\_Git\reason-client\ReasonFramework\bin\Debug\ReasonFramework.pdb
 D:\_Git\reason-client\ReasonFramework\obj\Debug\ReasonFramework.dll
 D:\_Git\reason-client\ReasonFramework\obj\Debug\ReasonFramework.pdb
-D:\_Git\reason-client\ReasonFramework\obj\Debug\ReasonFramework.csprojResolveAssemblyReference.cache
+D:\_git\reason-client\ReasonFramework\obj\Debug\ResolveAssemblyReference.cache
