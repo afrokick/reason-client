@@ -16,17 +16,22 @@ namespace ReasonFramework.Common
     /// <summary>
     /// Class for work with net
     /// </summary>
-    public class Network
+    public partial class Network
     {
         private const string SERVER_PATCH = "http://devby.ru/server/engine.php";
         //private List<WebClient> _webClients;
-        //private Storage _storage;
-        public event ResponseEventHandler OnAuthComplated;
-        public event ResponseEventHandler OnSendTaskComplated;
+        private Storage _storage;
+        public event ResponseEventHandler OnAuthCompleted;
+        public event ResponseEventHandler OnSendTaskCompleted;
 
         public Network()
         {
             //_webClients = new List<WebClient>();
+        }
+
+        public void InitStorage(Storage storage)
+        {
+            _storage = storage;
         }
 
         #region Down level work
@@ -39,6 +44,8 @@ namespace ReasonFramework.Common
         {
             try
             {
+                if (_storage.Id != 0)
+                    request.AddParam("userdbid", _storage.Id);
                 Logger.Log("[Network] Send packet: {0} into {1}", request.GetMethod, string.Concat(SERVER_PATCH, "?", request.GetParamsString()));
                 var webClient = new WebClient();
                 //webClient.DownloadDataAsync(new Uri(string.Concat(SERVER_PATCH, "?", request.GetParamsString())));
@@ -83,6 +90,7 @@ namespace ReasonFramework.Common
             Logger.Log("input data:{0}", data);
             var response = new NetResponse(data);
             var method = response.GetMethod;
+            //Logger.Log("input data method:{0}", method.ToString());
 
             if (response.IsError)
             {
@@ -92,12 +100,17 @@ namespace ReasonFramework.Common
             switch(method)
             {
                 case PacketTypes.auth:
-                    if (OnAuthComplated != null)
-                        OnAuthComplated(response);
+                    if (OnAuthCompleted != null)
+                    {
+                        OnAuthCompleted(response);
+                    }
                     break;
+                case PacketTypes.gettask:
                 case PacketTypes.sendtask:
-                    if (OnSendTaskComplated != null)
-                        OnSendTaskComplated(response);
+                    if (OnSendTaskCompleted != null)
+                    {
+                        OnSendTaskCompleted(response);
+                    }
                     break;
                 default:
                     Logger.Log("Error parse: Packet haven't method!");
@@ -106,65 +119,6 @@ namespace ReasonFramework.Common
         }
 
         #endregion
-        #region up level
-        public void SendComplateTask(string comment)
-        {
-
-        }
-        /// <summary>
-        /// Пользователь выполнил или закрыл таск
-        /// </summary>
-        /// <param name="complated"></param>
-        /// <param name="rank"></param>
-        /// <param name="comment"></param>
-        public void SendTaskDone(bool complated, byte rank = 0, string comment = "")
-        {
-            var request = new NetRequest(PacketTypes.sendtask);
-            request.AddParam("complated", complated);
-            if (complated)
-            {
-                if (rank != 0)
-                    request.AddParam("rank", rank);
-                if (!string.IsNullOrEmpty(comment.Trim()))
-                    request.AddParam("comment", comment);
-            }
-            SendRequest(request);
-        }
-
-        public void SendLike()
-        {
-
-        }
-
-        /// <summary>
-        /// Посылаем при нажатии кнопки "Вход через..." или "Вход" для стендэлон
-        /// </summary>
-        /// <param name="loginType"></param>
-        /// <param name="login"></param>
-        /// <param name="pass"></param>
-        public void SendAuth(LoginTypeEnum loginType, string login = "", string pass = "")
-        {
-            var request = new NetRequest(PacketTypes.auth);
-            request.AddParam("auth_type",loginType.ToString());
-            switch (loginType)
-            {
-                case LoginTypeEnum.stand_alone:
-                    request.AddParam("login", login);
-                    request.AddParam("pass", pass);
-                    break;
-                case LoginTypeEnum.vk:
-                    break;
-                default:
-                    break;
-            }
-
-            SendRequest(request);
-        }
-        #endregion
-
-        private void ResetAllCallback()
-        {
-            OnAuthComplated = null;
-        }
+        
     }
 }

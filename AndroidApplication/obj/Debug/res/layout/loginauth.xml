@@ -9,13 +9,15 @@
         android:layout_height="wrap_content"
         android:id="@+id/tbLogin"
         android:contentDescription="enter your name..."
-        android:hint="Your name..." />
+        android:hint="Your name..."
+        android:text="q" />
     <EditText
         android:inputType="textPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tbPass"
-        android:hint="Your pass..." />
+        android:hint="Your pass..."
+        android:text="q" />
     <Button
         android:text="Enter"
         android:layout_width="fill_parent"

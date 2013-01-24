@@ -10,5 +10,6 @@ namespace ReasonFramework.Common
         nil,
         auth,
         sendtask,
+        gettask,
     }
 }

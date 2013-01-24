@@ -9,26 +9,53 @@ using Android.OS;
 
 using ReasonFramework.Common;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace ReasonApplication
 {
     [Activity(Label = "AndroidApplication", MainLauncher = true, Icon = "@drawable/icon")]
     public class ReasonApplication : Activity
     {
+        #region Fields
         private Storage _storage;
         private Network _net;
 
+        private TextView lbSkipped;
+        private TextView lbCompleted;
+        private TextView lbWait;
+        private TextView lbName;
+        private TextView lbTaskText;
+        private TextView lbTaskRank;
+        private EditText tbComment;
+
+        private ScrollView layoutTask;
+        private LinearLayout layoutHome;
+
+        private Timer timer;
+        #endregion
+        #region Impl
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             _net = new Network();
             _storage = new Storage(_net);
+            _net.InitStorage(_storage);
 
-            // Set our view from the "main" layout resource
+            SetMainScreen();
+        }
+
+        protected override void OnDestroy()
+        {
+            if (timer != null)
+                timer.Stop();
+            base.OnDestroy();
+        }
+        #endregion
+
+        private void SetMainScreen()
+        {
             SetContentView(Resource.Layout.Main);
 
-            // Get our button from the layout resource,
-            // and attach an event to it
             Button button = FindViewById<Button>(Resource.Id.btStandalone);
             button.Click += delegate
             {
@@ -36,7 +63,6 @@ namespace ReasonApplication
                 SetLoginAuthScreen();
             };
         }
-
         private void SetLoginAuthScreen()
         {
             SetContentView(Resource.Layout.LoginAuth);
@@ -46,7 +72,7 @@ namespace ReasonApplication
                 btLogin.Enabled = false;
                 var lbError = FindViewById<TextView>(Resource.Id.lbError);
                 lbError.Text = "";
-                System.Threading.Tasks.Task.Factory.StartNew(() => _net.SendAuth(LoginTypeEnum.stand_alone,
+                Task.Factory.StartNew(() => _net.SendAuth(LoginTypeEnum.stand_alone,
                                                           FindViewById<EditText>(Resource.Id.tbLogin).Text,
                                                           FindViewById<EditText>(Resource.Id.tbPass).Text))
                     .ContinueWith((t) =>
@@ -66,6 +92,16 @@ namespace ReasonApplication
         private void SetHomeScreen()
         {
             SetContentView(Resource.Layout.HomeScreen);
+            lbName = FindViewById<TextView>(Resource.Id.lbName);
+            lbCompleted = FindViewById<TextView>(Resource.Id.lbCompleted);
+            lbSkipped = FindViewById<TextView>(Resource.Id.lbSkipped);
+            tbComment = FindViewById<EditText>(Resource.Id.tbTaskComment);
+            lbTaskText = FindViewById<TextView>(Resource.Id.lbTaskText);
+            lbWait = FindViewById<TextView>(Resource.Id.lbWait);
+            layoutTask = FindViewById<ScrollView>(Resource.Id.scroll);
+            layoutHome = FindViewById<LinearLayout>(Resource.Id.tab1);
+            lbTaskRank = FindViewById<TextView>(Resource.Id.lbRank);
+
             try
             {
                 var tabs = (TabHost)FindViewById<TabHost>(Resource.Id.tabHost1);
@@ -88,34 +124,95 @@ namespace ReasonApplication
             {
                 Logger.Log("error23:{0}", ex);
             }
+            var layout = FindViewById<ScrollView>(Resource.Id.scroll);
+            var btCloseTask = FindViewById<Button>(Resource.Id.btCloseTask);
+            btCloseTask.Click += (o, k) =>
+            {
+                if (_storage.CurrentTask == null)
+                    return;
+                HideTask();
+                Task.Factory.StartNew(() => _net.SendTaskDone(false)).
+                    ContinueWith((t) =>
+                    {
+                        UpdateUserDataView();
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+            };
 
-            var btnSendComment = FindViewById<Button>(Resource.Id.btSendComment);
+            var btSendTask = FindViewById<Button>(Resource.Id.btSendComment);
+            btSendTask.Click += (o, k) =>
+            {
+                //var btn = new Button(this);
+                //btn.SetText("New Button", TextView.BufferType.Normal);
+                //layout.AddView(btn);
+
+                if (_storage.CurrentTask == null)
+                    return;
+                HideTask();//->Close()
+                Task.Factory.StartNew(() => _net.SendTaskDone(true, (byte)0, tbComment.Text.Length > 0 ? tbComment.Text : "")).
+                    ContinueWith((t) =>
+                    {
+                        UpdateUserDataView();
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+            };
             UpdateUserDataView();
             _storage.OnDataUpdate += () =>
             {
-                UpdateUserDataView();
+                RunOnUiThread(() => UpdateUserDataView());
             };
+
+            timer = new Timer();
+            timer.Interval = 10000;
+            timer.Elapsed += (o,k) =>
+            {
+                if (_storage.CurrentTask == null)
+                {
+                    Task.Factory.StartNew(() => _net.GetTask());
+                    Logger.Log("try get new tasks...");
+                }
+                timer.Enabled = true;
+            };
+            timer.Start();
         }
 
         private void UpdateUserDataView()
         {
-            var lbName = FindViewById<TextView>(Resource.Id.lbName);
+            Logger.Log("Game: UpdateUserDataView()");
+            
             lbName.Text = string.Format("{0}(id:{1})", _storage.Name, _storage.Id);
-
-            var lbComplated = FindViewById<TextView>(Resource.Id.lbComplated);
-            lbComplated.Text = string.Format("Complated: {0}", _storage.ComplatedTasks);
-
-            var lbSkipped = FindViewById<TextView>(Resource.Id.lbSkipped);
+            lbCompleted.Text = string.Format("Completed: {0}", _storage.CompletedTasks);
             lbSkipped.Text = string.Format("Skipped: {0}", _storage.SkippedTasks);
 
+            tbComment.Text = "";
             if (_storage.CurrentTask != null)
-            {
-                var lbTaskText = FindViewById<TextView>(Resource.Id.lbTaskText);
+            {                
                 lbTaskText.Text = _storage.CurrentTask.Text;
-
-                var lbTaskRank = FindViewById<TextView>(Resource.Id.lbRank);
                 lbTaskRank.Text = _storage.CurrentTask.Ranking;
+                ShowTask();
             }
+            else
+            {
+                HideTask();
+            }
+
+            
+            lbWait.Visibility = _storage.CurrentTask != null ? ViewStates.Invisible : ViewStates.Visible;
+        }
+        //убирает таск во временную карзину
+        private void HideTask()
+        {
+            layoutTask.Visibility = ViewStates.Invisible;
+            lbWait.Visibility = ViewStates.Visible;
+        }
+        //показывает новый таск, или тот, который скрыли
+        private void ShowTask()
+        {
+            layoutTask.Visibility = ViewStates.Visible;
+            lbWait.Visibility = ViewStates.Invisible;
+        }
+        //убирает полностью таск
+        private void DeleteTask()
+        {
+
         }
     }
 }

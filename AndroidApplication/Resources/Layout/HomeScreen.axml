@@ -41,11 +41,11 @@
                     p1:layout_marginTop="10dp"
                     p1:layout_marginLeft="10dp" />
                 <TextView
-                    p1:text="complated"
+                    p1:text="completed"
                     p1:textAppearance="?android:attr/textAppearanceMedium"
                     p1:layout_width="wrap_content"
                     p1:layout_height="wrap_content"
-                    p1:id="@+id/lbComplated"
+                    p1:id="@+id/lbCompleted"
                     p1:layout_marginLeft="10dp" />
                 <TextView
                     p1:text="skipped"
@@ -55,54 +55,100 @@
                     p1:id="@+id/lbSkipped"
                     p1:layout_marginLeft="10dp" />
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 p1:layout_width="match_parent"
                 p1:layout_height="match_parent"
                 p1:id="@+id/tab2"
                 p1:orientation="vertical">
-                <Button
-                    p1:text="x"
-                    p1:layout_width="40dp"
-                    p1:layout_height="40dp"
-                    p1:id="@+id/btCloseTask"
-                    p1:layout_gravity="right" />
+                <ScrollView
+                    p1:id="@+id/scroll"
+                    p1:layout_width="fill_parent"
+                    p1:layout_height="300dp"
+                    p1:layout_marginTop="20dp"
+                    p1:background="@android:color/darker_gray">
+                    <LinearLayout
+                        p1:layout_width="match_parent"
+                        p1:layout_height="match_parent"
+                        p1:orientation="vertical">
+                        <Button
+                            p1:text="x"
+                            p1:layout_width="40dp"
+                            p1:layout_height="40dp"
+                            p1:id="@+id/btCloseTask"
+                            p1:layout_gravity="right" />
+                        <TextView
+                            p1:text="tasktext"
+                            p1:textAppearance="?android:attr/textAppearanceMedium"
+                            p1:layout_width="match_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/lbTaskText"
+                            p1:layout_marginLeft="20dp"
+                            p1:layout_marginRight="20dp"
+                            p1:layout_marginBottom="20dp" />
+                        <EditText
+                            p1:inputType="textMultiLine"
+                            p1:layout_width="match_parent"
+                            p1:layout_height="100dp"
+                            p1:id="@+id/tbTaskComment"
+                            p1:layout_marginRight="40dp"
+                            p1:layout_marginLeft="40dp"
+                            p1:layout_marginBottom="10dp"
+                            p1:hint="Введите ваш комменртарий"
+                            p1:gravity="left" />
+                        <TextView
+                            p1:text="rank"
+                            p1:textAppearance="?android:attr/textAppearanceMedium"
+                            p1:layout_width="match_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/lbRank"
+                            p1:layout_marginBottom="10dp"
+                            p1:layout_marginLeft="100dp"
+                            p1:layout_marginRight="100dp"
+                            p1:gravity="center" />
+                        <Button
+                            p1:text="Done"
+                            p1:layout_width="match_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/btSendComment"
+                            p1:layout_marginLeft="100dp"
+                            p1:layout_marginRight="100dp" />
+                        <Button
+                            p1:text="Button"
+                            p1:layout_width="fill_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/button1" />
+                        <Button
+                            p1:text="Button5"
+                            p1:layout_width="fill_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/button5" />
+                        <Button
+                            p1:text="Button"
+                            p1:layout_width="fill_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/button4" />
+                        <Button
+                            p1:text="Button"
+                            p1:layout_width="fill_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/button3" />
+                        <Button
+                            p1:text="Button"
+                            p1:layout_width="fill_parent"
+                            p1:layout_height="wrap_content"
+                            p1:id="@+id/button2" />
+                    </LinearLayout>
+                </ScrollView>
                 <TextView
-                    p1:text="tasktext"
+                    p1:text="Ожидание такска..."
                     p1:textAppearance="?android:attr/textAppearanceMedium"
-                    p1:layout_width="match_parent"
+                    p1:layout_width="wrap_content"
                     p1:layout_height="wrap_content"
-                    p1:id="@+id/lbTaskText"
-                    p1:layout_marginLeft="20dp"
-                    p1:layout_marginRight="20dp"
-                    p1:layout_marginBottom="20dp" />
-                <EditText
-                    p1:inputType="textMultiLine"
-                    p1:layout_width="match_parent"
-                    p1:layout_height="100dp"
-                    p1:id="@+id/tbTaskComment"
-                    p1:layout_marginRight="40dp"
-                    p1:layout_marginLeft="40dp"
-                    p1:layout_marginBottom="10dp"
-                    p1:hint="Введите ваш комменртарий"
-                    p1:gravity="left" />
-                <TextView
-                    p1:text="rank"
-                    p1:textAppearance="?android:attr/textAppearanceMedium"
-                    p1:layout_width="match_parent"
-                    p1:layout_height="wrap_content"
-                    p1:id="@+id/lbRank"
-                    p1:layout_marginBottom="10dp"
-                    p1:layout_marginLeft="100dp"
-                    p1:layout_marginRight="100dp"
-                    p1:gravity="center" />
-                <Button
-                    p1:text="Done"
-                    p1:layout_width="match_parent"
-                    p1:layout_height="wrap_content"
-                    p1:id="@+id/btSendComment"
-                    p1:layout_marginLeft="100dp"
-                    p1:layout_marginRight="100dp" />
-            </LinearLayout>
+                    p1:id="@+id/lbWait"
+                    p1:layout_marginTop="200dp"
+                    p1:layout_gravity="top"
+                    p1:layout_marginLeft="50dp" />
+            </RelativeLayout>
         </FrameLayout>
     </LinearLayout>
 </TabHost>

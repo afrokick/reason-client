@@ -45,7 +45,7 @@ namespace ReasonFramework.Common
             foreach (var s in mas)
             {
                 var temp = s.Split(new char[] { '=' });
-                _params[temp[0].ToLower()] = temp[1];
+                _params[temp[0].ToLower()] = HttpUtility.UrlDecode(temp[1]);
                 
             }
 

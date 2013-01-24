@@ -28,12 +28,12 @@ namespace ReasonFramework.Common
         public NetRequest(PacketTypes header)
         {
             _params = new Dictionary<string, string>();
-            _params["method"] = header.ToString().ToLower();
+            AddParam("method", header.ToString().ToLower());
         }
 
         public void AddParam(string key, string value)
         {
-            _params[key.ToLower()] = value;
+            _params[key.ToLower()] = HttpUtility.HtmlEncode(value);
         }
 
         public void AddParam(string key, int value)

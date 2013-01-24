@@ -6,7 +6,7 @@ namespace ReasonFramework.Common
     /// <summary>
     /// Задание
     /// </summary>
-    public class Task
+    public class GameTask
     {
         private string _taskText;//текст таска
         public string Text { get { return _taskText; } }
@@ -20,7 +20,7 @@ namespace ReasonFramework.Common
         private List<Comment> _taskComments; //коменты таска
         public List<Comment> Comments { get { return _taskComments; } }
 
-        public Task(string text, double rank, List<Comment> comments = null, byte userRank = 0)
+        public GameTask(string text, double rank, List<Comment> comments = null, byte userRank = 0)
         {
             _taskText = text;
             _taskRanking = rank;

@@ -17,16 +17,16 @@ namespace ReasonFramework.Common
 
         private Dictionary<string, string> _dicUids;
 
-        private int _complatedTasks;
-        public int ComplatedTasks { 
-            get { return _complatedTasks; }
+        private int _completedTasks;
+        public int CompletedTasks { 
+            get { return _completedTasks; }
         }
 
         private int _skippedTasks;
         public int SkippedTasks { get { return _skippedTasks; } }
 
-        private Task _currentTask;
-        public Task CurrentTask { get { return _currentTask; } }
+        private GameTask _currentTask;
+        public GameTask CurrentTask { get { return _currentTask; } }
 
         public event UpdateDataEventHandler OnDataUpdate;
 
@@ -38,17 +38,17 @@ namespace ReasonFramework.Common
             _net = net;
             _dicUids = new Dictionary<string, string>();
 
-            _net.OnAuthComplated += OnAuthComplatedCallback;
-            _net.OnSendTaskComplated += OnSendTaskComplatedCallback;
+            _net.OnAuthCompleted += OnAuthCompletedCallback;
+            _net.OnSendTaskCompleted += OnSendTaskCompletedCallback;
         }
         #region Callbacks
-        private void OnAuthComplatedCallback(NetResponse response)
+        private void OnAuthCompletedCallback(NetResponse response)
         {
             if (!response.IsError)
             {
                 _id = int.Parse(response.GetValue("id"));
                 _name = response.GetValue("name");
-                _complatedTasks = int.Parse(response.GetValue("completed"));
+                _completedTasks = int.Parse(response.GetValue("completed"));
                 _skippedTasks = int.Parse(response.GetValue("skipped"));
                 if (response.IsContainsKey("task"))
                 {
@@ -65,16 +65,37 @@ namespace ReasonFramework.Common
                     //        var commParam = comm.Split(new string[]{";1;"},StringSplitOptions.RemoveEmptyEntries);
                     //    }
                     //}
-                    _currentTask = new Task(taskText, taskRank, taskComments, taskUserRank);
+                    _currentTask = new GameTask(taskText, taskRank, taskComments, taskUserRank);
                 }
                 CallDataUpdate();
             }
         }
-        private void OnSendTaskComplatedCallback(NetResponse response)
+        private void OnSendTaskCompletedCallback(NetResponse response)
         {
             if (!response.IsError)
             {
-
+                if (response.IsContainsKey("task"))
+                {
+                    var taskText = response.GetValue("task");
+                    var taskRank = double.Parse(response.GetValue("rank"));
+                    byte taskUserRank = 0;//load from localStorage
+                    List<Comment> taskComments = null;
+                    //if (response.IsContainsKey("comments"))
+                    //{
+                    //    taskComments = new List<Comment>();
+                    //    var comments = response.GetValue("comments").Split(new char[]{'|'});
+                    //    foreach(var comm in comments)
+                    //    {
+                    //        var commParam = comm.Split(new string[]{";1;"},StringSplitOptions.RemoveEmptyEntries);
+                    //    }
+                    //}
+                    _currentTask = new GameTask(taskText, taskRank, taskComments, taskUserRank);
+                }
+                else
+                {
+                    _currentTask = null;
+                }
+                //CallDataUpdate();
             }
         }
         #endregion
@@ -82,18 +103,20 @@ namespace ReasonFramework.Common
         {
             if (OnDataUpdate != null)
                 OnDataUpdate();
+            else
+            {
+                Logger.Log("[ERROR] Storage.OnDataUpdate() null!");
+            }
         }
 
-        private void SetComplatedTasks()
+        public void SetCompletedTasks()
         {
-            _complatedTasks++;
-            CallDataUpdate();
+            _completedTasks++;
         }
 
-        private void SetSkippedTasks()
+        public void SetSkippedTasks()
         {
             _skippedTasks++;
-            CallDataUpdate();
         }
 
         private void LoadLocal()
